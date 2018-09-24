@@ -1,7 +1,6 @@
 package com.example.fpinscala.datastructures
 
 import org.scalatest.{ WordSpec, Matchers }
-import Matchers.{ length => _ }
 
 class ListSpec extends WordSpec with Matchers {
   import com.example.fpinscala.datastructures.List._
@@ -72,7 +71,7 @@ class ListSpec extends WordSpec with Matchers {
   }
 
   "length" should {
-    // scalatest length use case: "abc" should have length 0
+    // scalatest length use case: "abc" should have length 3
     "return 0 on empty list" in {
       List.length(Nil) shouldEqual 0
     }
