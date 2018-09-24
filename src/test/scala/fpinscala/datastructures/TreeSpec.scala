@@ -55,4 +55,16 @@ class TreeSpec extends WordSpec with Matchers {
     }
   }
 
+  "buildCompleteTree" should {
+    "works" in {
+      buildCompleteTree(0, 2) shouldEqual Branch(Branch(Leaf(0),Leaf(1)),Branch(Leaf(2),Leaf(3)))
+    }
+  }
+
+  "buildTree" should {
+    "works" in {
+      buildTree(List(0, 1, 2, 3)) shouldEqual Branch(Branch(Leaf(0),Leaf(1)),Branch(Leaf(2),Leaf(3)))
+    }
+  }
+
 }

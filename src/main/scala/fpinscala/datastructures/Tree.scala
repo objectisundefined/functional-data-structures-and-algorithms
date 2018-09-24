@@ -42,11 +42,14 @@ object Tree {
     case Branch(l, r) => g(fold(l)(f)(g), fold(r)(f)(g))
   }
 
-  /**
-  buildCompleteTree
+  def buildCompleteTree(a: Int, depth: Int): Tree[Int] =
+    if (depth == 0) Leaf(a)
+    else Branch(buildCompleteTree(2 * a, depth - 1), buildCompleteTree(2 * a + 1, depth - 1))
 
-  buildTree
-  */
+  def buildTree[A](list: List[A]): Tree[A] = list match {
+    case a :: Nil => Leaf(a)
+    case _ => { val k = list.length / 2; Branch(buildTree(list.take(k)), buildTree(list.drop(k))) }
+  }
 
   def flip[A](tree: Tree[A]): Tree[A] = tree match {
     case t @ Leaf(_) => t
