@@ -1,4 +1,4 @@
-package com.example.fpinscala.datastructures
+package fpinscala.datastructures.trees
 
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
@@ -46,23 +46,19 @@ object Tree {
   buildCompleteTree
 
   buildTree
-
-  flip
-
-  equal
-
-  flippedEqual
-
-  preorder
-
-  inorder
-
-  postorder
-
-  preorderAcc
-
-  inorderAcc
-
-  postorderAcc
   */
+
+  def flip[A](tree: Tree[A]): Tree[A] = tree match {
+    case t @ Leaf(_) => t
+    case Branch(l, r) => Branch(flip(r), flip(l))
+  }
+
+  /**
+  def toList[A](tree: Tree[A]): List[A] = tree match {
+    case Leaf(a) => List(a)
+    case Branch(l, r) => toList(l) ++ toList(r)
+  }
+  */
+  def toList[A](tree: Tree[A]): List[A] = fold(tree)(a => List(a))(_ ++ _)
+
 }

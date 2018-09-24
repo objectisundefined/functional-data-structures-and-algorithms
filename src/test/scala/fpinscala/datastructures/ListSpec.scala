@@ -1,9 +1,9 @@
-package com.example.fpinscala.datastructures
+package fpinscala.datastructures.lists
 
 import org.scalatest.{ WordSpec, Matchers }
 
 class ListSpec extends WordSpec with Matchers {
-  import com.example.fpinscala.datastructures.List._
+  import fpinscala.datastructures.lists.List._
   
   "List" should {
     "return empty List" in {

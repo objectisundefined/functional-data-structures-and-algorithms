@@ -1,10 +1,10 @@
-package com.example.fpinscala.datastructures
+package fpinscala.datastructures.lists
 
 sealed trait List[+A]
 case object Nil extends List[Nothing]
 case class ::[+A](head: A, tail: List[A]) extends List[A]
 
-object List extends App {
+object List {
   def apply[A](as: A*): List[A] =
     if (as.isEmpty) Nil
     else ::(as.head, apply(as.tail: _*))

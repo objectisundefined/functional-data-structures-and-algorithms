@@ -1,9 +1,9 @@
-package com.example.fpinscala.datastructures
+package fpinscala.datastructures.trees
 
 import org.scalatest.{ Matchers, WordSpec }
 
 class TreeSpec extends WordSpec with Matchers {
-  import com.example.fpinscala.datastructures.Tree._
+  import fpinscala.datastructures.trees.Tree._
 
   "size" should {
     // scalatest size use case: "abc" should have size 3
@@ -32,6 +32,26 @@ class TreeSpec extends WordSpec with Matchers {
     "apply f to all element" in {
       map(Leaf(1))(_ ⇒ "A") shouldEqual Leaf("A")
       map(Branch(Branch(Leaf(1), Leaf(2)), Leaf(40)))(_ + 1) shouldEqual Branch(Branch(Leaf(2), Leaf(3)), Leaf(41))
+    }
+  }
+
+  "flip" should {
+    "return leaf when flip leaf" in {
+      flip(Leaf(1)) shouldEqual Leaf(1)
+    }
+
+    "return all parts reversed branch when flip branch" in {
+      flip(Branch(Branch(Leaf(1), Leaf(2)), Leaf(40))) shouldEqual Branch(Leaf(40), Branch(Leaf(2), Leaf(1)))
+    }
+  }
+
+  "toList" should {
+    "return a list with only one elem when apply on leaf" in {
+      toList(Leaf(1)) shouldEqual List(1)
+    }
+
+    "return a list contains all elems when apply on branch" in {
+      toList(Branch(Branch(Leaf(1), Leaf(2)), Leaf(40))) shouldEqual List(1, 2, 40)
     }
   }
 
