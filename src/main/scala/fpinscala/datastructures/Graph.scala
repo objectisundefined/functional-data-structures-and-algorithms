@@ -19,6 +19,7 @@ object Graph {
   }
   */
 
+  /**
   def depthFirst(initial: String, g: List[(String, String)]): List[String] = {
     def depthf(nodes: List[String], visited: List[String]): List[String] = nodes match {
       case Nil => visited
@@ -29,6 +30,15 @@ object Graph {
     }
 
     depthf(List(initial), List()).reverse
+  }
+  */
+  def depthFirst(initial: String, g: List[(String, String)]): List[String] = {
+    def fn(node: String, visited: List[String]): List[String] = {
+      if (visited.contains(node)) visited
+      else succSet(node, g).foldLeft(visited ++ List(node))((acc, x) => fn(x, acc))
+    }
+
+    fn(initial, List[String]())
   }
 
   /**
@@ -93,7 +103,16 @@ object Graph {
     result
   }
 
-  def cycled(g: List[(String, String)]): Boolean = ???
+  def cycled(g: List[(String, String)]): Boolean = {
+    def fn(node: String, visited: List[String]): Boolean = {
+      if (visited.contains(node)) true
+      else succSet(node, g).exists(fn(_, node :: visited))
+    }
+
+    val (start, _) = g.unzip
+    val result = start.exists(fn(_, List[String]()))
+    result
+  }
 
   def traverseGraph(g: List[(String, String)]) = {
     def fn(node: String, visited: List[String]): List[String] = {

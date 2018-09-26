@@ -61,4 +61,17 @@ class ListSpec extends WordSpec with Matchers {
     }
   }
 
+  "traverseGraph" should {
+    "works" in {
+      traverseGraph(grwork) shouldEqual List("getup", "shower", "breakfast", "dress", "office", "dinner", "leisurely_lunch", "movie")
+    }
+  }
+
+  "cycled" should {
+    "works" in {
+      cycled(graph) shouldEqual false
+      cycled(grwork) shouldEqual true
+    }
+  }
+
 }
