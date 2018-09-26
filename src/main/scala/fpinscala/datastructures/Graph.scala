@@ -93,4 +93,17 @@ object Graph {
     result
   }
 
+  def cycled(g: List[(String, String)]): Boolean = ???
+
+  def traverseGraph(g: List[(String, String)]) = {
+    def fn(node: String, visited: List[String]): List[String] = {
+      if (visited.contains(node)) visited
+      else succSet(node, g).foldLeft(visited ++ List(node))((acc, x) => fn(x, acc))
+    }
+
+    val (start, _) = g.unzip
+    val result = start.foldLeft(List[String]())((acc, x) => fn(x, acc))
+    result
+  }
+
 }
