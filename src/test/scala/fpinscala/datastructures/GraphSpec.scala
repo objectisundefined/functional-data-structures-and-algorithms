@@ -74,4 +74,11 @@ class ListSpec extends WordSpec with Matchers {
     }
   }
 
+  "foldl" should {
+    "works" in {
+      foldl(grwork)(List[String]())((acc, x) => acc ++ List(x)) shouldEqual
+      List("getup", "shower", "breakfast", "dress", "office", "dinner", "leisurely_lunch", "movie")
+    }
+  }
+
 }

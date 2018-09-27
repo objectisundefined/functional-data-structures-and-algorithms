@@ -1,6 +1,6 @@
 package fpinscala.datastructures.graphs
 
-object Graph {
+object Graph extends App {
   def succSet(a: String, g: List[(String, String)]): List[String] = g match {
     case Nil => Nil
     case x :: xs if (a == x._1) => x._2 :: succSet(a, xs)
@@ -124,5 +124,35 @@ object Graph {
     val result = start.foldLeft(List[String]())((acc, x) => fn(x, acc))
     result
   }
+
+  def foldl[A](g: List[(String, String)])(z: A)(f: (A, String) => A) = {
+    def fn(node: String, visited: (List[String], A)): (List[String], A) = {
+      if (visited._1.contains(node)) visited
+      else succSet(node, g).foldLeft(
+        (visited._1 ++ List(node), f(visited._2, node)))
+        { (acc: (List[String], A), x: String) => fn(x, acc) }
+    }
+
+    val (start, _) = g.unzip
+    val result = start.foldLeft((List[String](), z))((acc, x) => fn(x, acc))
+    result._2
+  }
+
+  val grwork = List(
+    ("getup","shower"),
+    ("shower", "breakfast"),
+
+    ("breakfast","dress"),
+    ("dress","office"),
+    ("office", "dinner"),
+
+    ("breakfast","leisurely_lunch"),
+    ("leisurely_lunch", "movie"),
+    ("movie", "breakfast")
+  )
+
+  println(
+    foldl(grwork)(List[String]())((acc, x) => acc ++ List(x))
+  )
 
 }
