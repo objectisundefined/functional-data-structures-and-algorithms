@@ -2,7 +2,7 @@ package fpinscala.datastructures.graphs
 
 import org.scalatest.{ WordSpec, Matchers }
 
-class ListSpec extends WordSpec with Matchers {
+class GraphSpec extends WordSpec with Matchers {
   import fpinscala.datastructures.graphs.Graph._
 
   val graph = List(
