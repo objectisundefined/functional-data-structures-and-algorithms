@@ -1,6 +1,6 @@
 package fpinscala.datastructures.randomaccesslists
 
-object RandAccessList extends App {
+object RandAccessList {
   def increment(numList: List[Int]): List[Int] = numList match {
     case Nil => List(1)
     case 0 :: xs => 1 :: xs
@@ -99,21 +99,5 @@ object RandAccessList extends App {
     case One(t) :: ts if i < t.size => One(setValInTree(i, newval, t)) :: ts
     case One(t) :: ts => One(t) :: setVal(i - t.size, newval, ts)
   }
-
-
-  println(increment(List(1, 0, 0)))
-  println(increment(List(1, 0, 1)))
-  println(increment(List(1, 1, 0)))
-  println(increment(List(1, 1, 1)))
-
-  println(add(List(1, 1), List(1, 1)))
-
-  val tree = List(11, 22, 33, 44, 55, 66, 77).reverse.foldLeft(List[Tree]())((b, a) =>
-    cons(b, a))
-  println(lookup(3, tree))
-  println(lookup(4, tree))
-  println(lookup(0, tree))
-  println(head(tree))
-  println(tail(tree))
 
 }
