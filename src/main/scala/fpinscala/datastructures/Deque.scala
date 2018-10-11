@@ -1,6 +1,6 @@
 package fpinscala.datastructures.deques
 
-object Deque extends App {
+object Deque {
 
   case class Deque(outLen: Int, out: Stream[Int], inLen: Int, in: Stream[Int], c: Int = 2) {
     def pushFront(elem: Int): Deque = {
@@ -9,42 +9,53 @@ object Deque extends App {
 
     def popFront(): (Int, Deque) = {
       out match {
-        case Stream.Empty => throw new IllegalArgumentException("Empty queue")
+        case Stream.Empty => in match {
+          case Stream.Empty => sys.error("empty queue")
+          case _ =>
+            val newOut = in.reverse
+            (newOut.head, Deque(inLen - 1, newOut.tail, 0, Stream.Empty, c))
+        }
         case x #:: newOut => (x, adjustStreams(outLen - 1, newOut, inLen, in, c))
+      }
+    }
+
+    def pushEnd(elem: Int): Deque = {
+      adjustStreams(outLen, out, inLen + 1, Stream.cons(elem, in), c)
+    }
+
+    def popEnd(): (Int, Deque) = {
+      in match {
+        case Stream.Empty => out match {
+          case Stream.Empty => sys.error("empty queue")
+          case _ =>
+            val newIn = out.reverse
+            (newIn.head, Deque(0, Stream.Empty, outLen - 1, newIn.tail, c))
+        }
+        case x #:: newIn => (x, adjustStreams(outLen, out, inLen - 1, newIn, c))
       }
     }
   }
 
   def adjustStreams(outLen: Int, out: Stream[Int], inLen: Int, in: Stream[Int], c: Int): Deque = {
-    if (outLen > c*inLen+1) {
-      val newOutLen = (outLen+inLen)/2
+    if (outLen > c * inLen + 1) {
+      val newOutLen = (outLen + inLen ) / 2
       val newInLen  = outLen + inLen - newOutLen
 
       val newOut = out.take(newOutLen)
       val newIn = in append out.drop(newInLen).reverse
 
       Deque(newOutLen, newOut, newInLen, newIn, c)
-    } else if (inLen > c*outLen+1) {
-      val newInLen = (outLen+inLen)/2
+    } else if (inLen > c * outLen + 1) {
+      val newInLen = (outLen + inLen ) / 2
       val newOutLen = outLen + inLen - newInLen
 
       val newIn = in.take(newInLen)
       val newOut = out append in.drop(newOutLen).reverse
 
       Deque(newOutLen, newOut, newInLen, newIn, c)
-    } else
+    } else {
       Deque(outLen, out, inLen, in, c)
+    }
   }
-
-  val dq = Deque(0, Stream.Empty, 0, Stream.Empty)
-  val dq1 = dq.pushFront(1)
-  val dq2 =  dq1.pushFront(2)
-  val dq3 = dq2.pushFront(3)
-
-  val (x,p) = dq3.popFront()
-  println(x)
-
-  val (y,p1) = p.popFront()
-  println(y)
 
 }
