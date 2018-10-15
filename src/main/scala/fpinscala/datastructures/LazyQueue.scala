@@ -1,7 +1,5 @@
 package fpinscala.datastructures.queues
 
-import scala.collection.SeqView
-
 object LazyQueue {
   case class LazyQueue(out: Stream[Int], outLen: Int, in: List[Int], inLen: Int) {
     def push(elem: Int) = makeLazyQueue(out, outLen, elem :: in, inLen + 1)
