@@ -55,9 +55,31 @@ object RBTree extends App {
     case _ => ggParent
   }
 
+  def remove(v: Int, t: Tree): Tree = {
+    def rm(v: Int, s: Tree): Tree = s match {
+      case End => End
+      case node @ Node(_, left, value, right) =>
+        if (v < value) node.copy(left = rm(v, left))
+        else if (v > value) node.copy(right = rm(v, right))
+        else (left, right) match {
+          case (End, End) => End
+          // just need to put left's value on node, then remove the duplicated value
+          // values move forward, don't need to change nodes' color
+          case (lNode@Node(_, gChild, lVal, _), _) => node.copy(value = lVal, left = rm(lVal, left))
+          case (_,  rNode@Node(_, gChild, rVal, _)) => node.copy(value = rVal, right = rm(rVal, right))
+        }
+    }
+
+    rm(v, t)
+  }
+
   def end: Tree = End
 
   val t = (1 to 10).toList.foldLeft(end)((tree, elem) => insert(elem, tree))
 
   println(t)
+
+  val r = remove(4, t)
+
+  println(r)
 }
