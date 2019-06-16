@@ -1,6 +1,6 @@
 package fpinscala.datastructures.rbtrees
 
-object RBTree extends App {
+object RBTree {
 
   sealed trait Color
   case object Red extends Color
