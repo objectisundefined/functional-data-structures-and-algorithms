@@ -34,6 +34,13 @@ class InsertionSortSpec extends WordSpec with Matchers {
       r shouldEqual List("a", "b", "c", "d", "e")
     }
 
+    "works when list has two same elems" in {
+      val l: List[Integer] = List(1, 3, 5, 2, 6, 3)
+      val r = insertionSort(l)
+
+      r shouldEqual List(1, 2, 3, 3, 5, 6)
+    }
+
   }
 
 }

@@ -1,6 +1,8 @@
 package fpinscala.algorithms.sorting
 
 object SelectionSort {
+
+  /*
   def selectionSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
     case Nil => Nil
     case x :: Nil => l
@@ -12,5 +14,14 @@ object SelectionSort {
       // `f ::: x :: r.tail` was the same as `f ::: (x :: r.tail)`
       a :: selectionSort(f ::: x :: r.tail)
   }
+  */
 
+  def selectionSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
+    case Nil => Nil
+    case x :: Nil => l
+    case _ =>
+      val a = l.min
+
+      return (l filter (_ == a)) ::: selectionSort(l filter (_ != a))
+  }
 }
