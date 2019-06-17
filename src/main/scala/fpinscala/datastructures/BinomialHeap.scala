@@ -1,6 +1,6 @@
 package fpinscala.datastructures.binomealheaps
 
-object BinomealHeap extends App {
+object BinomealHeap {
 
   case class Node(rank: Int, v: Int, children: List[Node])
 
