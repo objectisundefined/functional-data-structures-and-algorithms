@@ -55,6 +55,8 @@ object RBTree {
     case _ => ggParent
   }
 
+  // not correct, maybe not balanced
+  /*
   def remove(v: Int, t: Tree): Tree = {
     def rm(v: Int, s: Tree): Tree = s match {
       case End => End
@@ -71,6 +73,16 @@ object RBTree {
     }
 
     rm(v, t)
+  }
+  */
+
+  def traverse(t: Tree): List[Int] = t match {
+    case End => Nil
+    case Node(_, left, value, right) => traverse(left) ::: value :: traverse(right)
+  }
+
+  def remove(v: Int, t: Tree): Tree = {
+    traverse(t).toList.foldLeft(end)((tree, elem) => if (elem == v) tree else insert(elem, tree))
   }
 
   def end: Tree = End

@@ -4,6 +4,7 @@ project/target
 
 *.orig
 .idea
+.metals
 .project
 .classpath
 .metadata/
