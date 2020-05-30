@@ -17,14 +17,24 @@ class TreeSpec extends WordSpec with Matchers {
     case x :: xs => xs.foldLeft(true) { (_, a) => a == x }
   }
 
+  val root: Tree = (1 to 10).toList.foldLeft(end)((t: Tree, a: Int) => insert(a, t))
+
   "red black tree" should {
 
+    "insert should be ordered" in {
+      traverse(root) shouldEqual (1 to 10).toList
+    }
+
     "insert should be balanced" in {
-      balanced((1 to 10).toList.foldLeft(end)((t: Tree, a: Int) => insert(a, t))) shouldEqual true
+      balanced(root) shouldEqual true
+    }
+
+    "remove should be ordered" in {
+      traverse(remove(7, root)) shouldEqual (1 to 10).toList.filter(a => a != 7)
     }
 
     "remove should be balanced" in {
-      balanced(remove(7, (1 to 10).toList.foldLeft(end)((t: Tree, a: Int) => insert(a, t)))) shouldEqual true
+      balanced(remove(7, root)) shouldEqual true
     }
   }
 
