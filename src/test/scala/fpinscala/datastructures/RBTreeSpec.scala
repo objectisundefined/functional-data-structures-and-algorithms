@@ -5,14 +5,20 @@ import org.scalatest.{ Matchers, WordSpec }
 class TreeSpec extends WordSpec with Matchers {
   import fpinscala.datastructures.rbtrees.RBTree._
 
-  def height: Function1[Tree, List[Int]] = (t: Tree) => {
-    t match {
-      case End => List(0)
-      case Node(c, l, _, r) => ((n: Int) => height(l).map((x: Int) => x + n) ::: height(r).map((x: Int) => x + n))(if (c == Red) 0 else 1)
+  val height = (t: Tree) => {
+    val f = (t: Tree) => t match {
+      case Node(Black, _, _, _) => List[Int](1)
+      case _ => List[Int](0)
     }
+
+    val g = (a: List[Int], b: List[Int], c: List[Int]) => {
+      b.flatMap((x: Int) => a.map((z: Int) => x + z)) ::: c.flatMap((y: Int) => a.map((z: Int) => y + z))
+    }
+
+    traverse(t)(f)(g)
   }
 
-  def balanced (t: Tree): Boolean = height(t) match {
+  val balanced: Function1[Tree, Boolean] = (t: Tree) => height(t) match {
     case Nil => true
     case x :: xs => xs.foldLeft(true) { (_, a) => a == x }
   }
@@ -21,19 +27,19 @@ class TreeSpec extends WordSpec with Matchers {
 
   "red black tree" should {
 
-    "insert should be ordered" in {
-      traverse(root) shouldEqual (1 to 10).toList
+    "be ordered after insert" in {
+      toList(root) shouldEqual (1 to 10).toList
     }
 
-    "insert should be balanced" in {
+    "be balanced after insert" in {
       balanced(root) shouldEqual true
     }
 
-    "remove should be ordered" in {
-      traverse(remove(7, root)) shouldEqual (1 to 10).toList.filter(a => a != 7)
+    "be ordered after remove" in {
+      toList(remove(7, root)) shouldEqual (1 to 10).toList.filter(a => a != 7)
     }
 
-    "remove should be balanced" in {
+    "be balanced after remove" in {
       balanced(remove(7, root)) shouldEqual true
     }
   }
