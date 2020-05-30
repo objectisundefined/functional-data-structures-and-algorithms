@@ -87,11 +87,11 @@ object RBTree {
 
   def end: Tree = End
 
-  val t = (1 to 10).toList.foldLeft(end)((tree, elem) => insert(elem, tree))
+  // val t = (1 to 10).toList.foldLeft(end)((tree, elem) => insert(elem, tree))
 
-  println(t)
+  // println(t)
 
-  val r = remove(4, t)
+  // val r = remove(4, t)
 
-  println(r)
+  // println(r)
 }
