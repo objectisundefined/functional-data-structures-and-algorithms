@@ -90,9 +90,26 @@ object RBTree {
     traverse(t)(f)(g)
   }
 
+  /*
   def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
     case End => End
     case Node(c, x, l, r) => Node(c, f(x), map(l)(f), map(r)(f))
+  }
+  */
+
+  def map[A, B](t: Tree[A])(fn: A => B): Tree[B] = {
+    val f: Function1[Tree[A], Tree[B]] = (t: Tree[A]) => t match {
+      case End => End
+      // clear left and right to ensure type matching
+      case Node(c, x, l, r) => Node(c, fn(x), End, End) 
+    }
+
+    val g: Function3[Tree[B], Tree[B], Tree[B], Tree[B]] = (t: Tree[B], l: Tree[B], r: Tree[B]) => t match {
+      case Node(c, v, _, _) => Node(c, v, l, r)
+      case _ => sys.error("map[A, B](t: Tree[A])(f: A => B) -> traverse[A, Tree[B]](t)(f_)(g): g should only receive Node[B]")
+    }
+
+    traverse[A, Tree[B]](t)(f)(g)
   }
 
   // delete by re creating
