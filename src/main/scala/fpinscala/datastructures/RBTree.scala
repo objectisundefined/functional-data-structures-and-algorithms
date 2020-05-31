@@ -6,37 +6,55 @@ object RBTree {
   case object Red extends Color
   case object Black extends Color
 
-  sealed abstract class Tree {
+  sealed trait Tree[+A] {
     def color: Color
   }
 
-  case class Node(color: Color, value: Int, left: Tree, right: Tree) extends Tree {
-    override def toString = "( " + left.toString + " " + (if (color == Red) "R " else "B ") + value.toString + " " + right.toString + " )"
+  case class Node[A](color: Color, value: A, left: Tree[A], right: Tree[A]) extends Tree[A] {
+
+    override def toString = {
+      val f = (t: Tree[A]) => t match {
+        case End => t.toString
+        case _ => "(" + t.toString + ")"
+      }
+
+      "Node " + (if (color == Red) "Red " else "Black ") + value.toString + " " + f(left) +  " " + f(right)
+    }
   }
 
-  case object End extends Tree {
-    override def toString = "."
+  case object End extends Tree[Nothing] {
     override val color: Color = Black
+    override def toString = "Nil"
   }
 
-  def blacken(t: Tree): Tree = t match {
+  def blacken[A](t: Tree[A]): Tree[A] = t match {
     case node@Node(Red, _, _, _) => node.copy(color = Black)
     case _ => t
   }
 
-  def insert(x: Int, t: Tree): Tree = {
-    def ins(s: Tree): Tree = s match {
+  def insert[A: Ordering](x: A, t: Tree[A]): Tree[A] = {
+    def ins(s: Tree[A]): Tree[A] = s match {
       case End => Node(Red, x, End, End)
       case node @ Node(_, v, l, r) =>
+        // change to generic comparing
+        /*
         if (x < v) balance(node.copy(left = ins(l)))
         else if (x > v) balance(node.copy(right = ins(r)))
         else node
+        */
+
+        val ord = implicitly[Ordering[A]].compare(x, v)
+
+        if (ord < 0) balance(node.copy(left = ins(l)))
+        else if (ord > 0) balance(node.copy(right = ins(r)))
+        else node
+
     }
 
     blacken(ins(t))
   }
 
-  private[this] def balance(ggParent: Node): Tree = ggParent match {
+  private[this] def balance[A](ggParent: Node[A]): Tree[A] = ggParent match {
     case Node(Black, _, gParent@Node(Red, _, parent@Node(Red, _, ggChild1, ggChild2), gChild), child) =>
       gParent.copy(color = Red,
       left = parent.copy(color = Black),
@@ -56,47 +74,52 @@ object RBTree {
     case _ => ggParent
   }
 
-  def traverse[A](t: Tree)(f: Tree => A)(g: (A, A, A) => A): A = t match {
+  def traverse[A, B](t: Tree[A])(f: Tree[A] => B)(g: (B, B, B) => B): B = t match {
     case End => f(End)
     case node@Node(_, _, l, r) => g(f(node), traverse(l)(f)(g), traverse(r)(f)(g))
   }
 
-  def toList(t: Tree): List[Int] = {
-    val f = (t: Tree) => t match {
-      case End => List[Int]()
-      case Node(_, x, _, _) => List[Int](x)
+  def toList[A](t: Tree[A]): List[A] = {
+    val f = (t: Tree[A]) => t match {
+      case End => List[A]()
+      case Node(_, x, _, _) => List[A](x)
     }
 
-    val g = (a: List[Int], b: List[Int], c: List[Int]) => b ::: a ::: c
+    val g = (a: List[A], b: List[A], c: List[A]) => b ::: a ::: c
 
     traverse(t)(f)(g)
   }
 
+  def map[A, B](t: Tree[A])(f: A => B): Tree[B] = t match {
+    case End => End
+    case Node(c, x, l, r) => Node(c, f(x), map(l)(f), map(r)(f))
+  }
+
   // delete by re creating
   /*
-  def remove(v: Int, t: Tree): Tree = {
-    toList(t).foldLeft(end)((tree, elem) => if (elem == v) tree else insert(elem, tree))
+  def remove[A: Ordering](v: A, t: Tree[A]): Tree[A] = {
+    toList(t).foldLeft(end.asInstanceOf[Tree[A]])((tree, elem) => if (elem == v) tree else insert[A](elem, tree))
   }
   */
 
-  def isBlack(t: Tree): Boolean = t match {
+  def isBlack[A](t: Tree[A]): Boolean = t match {
     case Node(Red, _, _, _) => false
     case _ => true
   }
 
-  private[this] def balL(c: Color, y: Int, lf: (Tree, Boolean), r: Tree): (Tree, Boolean) = {
+  private[this] def balL[A](c: Color, y: A, lf: (Tree[A], Boolean), r: Tree[A]): (Tree[A], Boolean) = {
     val (l, f)  = lf
 
     if (f) (Node(c, y, l, r), true) else balL_(c, y, l, r)
   }
 
-  private[this] def balR(c: Color, y: Int, l: Tree, rf: (Tree, Boolean)): (Tree, Boolean) = {
+  private[this] def balR[A](c: Color, y: A, l: Tree[A], rf: (Tree[A], Boolean)): (Tree[A], Boolean) = {
     val (r, f) = rf
 
     if (f) (Node(c, y, l, r), true) else balR_(c, y, l, r)
   }
 
-  private[this] def balL_(c1: Color, p: Int, n: Tree, r: Tree): (Tree, Boolean)  = {
+  private[this] def balL_[A](c1: Color, p: A, n: Tree[A], r: Tree[A]): (Tree[A], Boolean)  = {
     val Node(c2, s, sl, sr) = r
 
     if (c2 == Red) balL(Black, s, balL_(Red, p, n, sl), sr)
@@ -108,7 +131,7 @@ object RBTree {
     }
   }
 
-  private[this] def balR_(c1: Color, p: Int, l: Tree, n: Tree): (Tree, Boolean) = {
+  private[this] def balR_[A](c1: Color, p: A, l: Tree[A], n: Tree[A]): (Tree[A], Boolean) = {
     val Node(c2, s, sl, sr) = l
 
     if (c2 == Red) balR(Black, s, sl, balR_(Red, p, sr, n))
@@ -120,7 +143,7 @@ object RBTree {
     }
   }
 
-  private[this] def deleteRoot(t: Tree): (Tree, Boolean) = t match {
+  private[this] def deleteRoot[A: Ordering](t: Tree[A]): (Tree[A], Boolean) = t match {
     case Node(c, _, End, End) => (End, c == Red)
     case Node(_, _, l, End) => (blacken(l), true)
     case Node(_, _, End, r) => (blacken(r), true)
@@ -128,26 +151,35 @@ object RBTree {
       val m = findMin(r)
       balR(c, m, l, delete_(m, r))
     }
-    case _ => sys.error("deleteRoot(t: Tree): t should be Node")
+    case _ => sys.error("deleteRoot[A](t: Tree[A]): t should be Node[A]")
   }
 
-  private[this] def findMin(t: Tree): Int = t match {
+  private[this] def findMin[A](t: Tree[A]): A = t match {
     case Node(_, x, End, _) => x
     case Node(_, _, l, _) => findMin(l)
-    case _ => sys.error("findMin(t: Tree): t should be Node")
+    case _ => sys.error("findMin[A](t: Tree[A]): t should be Node[A]")
   }
 
-  private[this] def delete_(x: Int, t: Tree): (Tree, Boolean) = t match {
+  private[this] def delete_[A: Ordering](x: A, t: Tree[A]): (Tree[A], Boolean) = t match {
     case End => (End, true)
     case root@Node(c, y, l, r) =>
+      // change to generic comparing
+      /*
       if (x < y) balL(c, y, delete_(x, l), r)
       else if (x > y) balR(c, y, l, delete_(x, r))
       else deleteRoot(root)
+      */
+
+      val ord = implicitly[Ordering[A]].compare(x, y)
+
+      if (ord < 0) balL(c, y, delete_(x, l), r)
+      else if (ord > 0) balR(c, y, l, delete_(x, r))
+      else deleteRoot[A](root)
   }
 
-  def remove(x: Int, t: Tree): Tree = delete_(x, t)._1
+  def remove[A: Ordering](x: A, t: Tree[A]): Tree[A] = delete_(x, t)._1
 
-  def end: Tree = End
+  def end: Tree[Nothing] = End
 
 }
 
