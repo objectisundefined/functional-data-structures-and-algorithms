@@ -1,8 +1,9 @@
 package fpinscala.datastructures.randomaccesslists
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class RandAccessListSpec extends WordSpec with Matchers {
+class RandAccessListSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.randomaccesslists.RandAccessList._
 
   "binary increment" should {

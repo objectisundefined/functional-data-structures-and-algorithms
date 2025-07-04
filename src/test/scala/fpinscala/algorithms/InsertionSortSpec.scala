@@ -1,8 +1,9 @@
 package fpinscala.algorithms.sorting
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class InsertionSortSpec extends WordSpec with Matchers {
+class InsertionSortSpec extends AnyWordSpec with Matchers {
   import fpinscala.algorithms.sorting.InsertionSort._
 
   "insertionSort(list)" should {

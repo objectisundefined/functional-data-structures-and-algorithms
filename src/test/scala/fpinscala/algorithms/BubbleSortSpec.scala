@@ -1,8 +1,9 @@
 package fpinscala.algorithms.sorting
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class BubbleSortSpec extends WordSpec with Matchers {
+class BubbleSortSpec extends AnyWordSpec with Matchers {
   import fpinscala.algorithms.sorting.BubbleSort._
 
   "getLargest(list)" should {

@@ -1,13 +1,14 @@
 package fpinscala.datastructures.queues
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class LazyQueueSpec extends WordSpec with Matchers {
+class LazyQueueSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.queues.LazyQueue._
 
   "LazyQueue" should {
     "works when push first then pop" in {
-      val emptyQ = makeLazyQueue(Stream.empty, 0, Nil, 0)
+      val emptyQ = makeLazyQueue(LazyList.empty, 0, Nil, 0)
       val q = List(10, 20, 30).foldLeft(emptyQ)((acc, x) => acc.push(x))
 
       val (a1, q1) = q.pop
@@ -22,7 +23,7 @@ class LazyQueueSpec extends WordSpec with Matchers {
 
     "throw Exception on empty queue" in {
       intercept[java.lang.RuntimeException] {
-        val emptyQ = makeLazyQueue(Stream.empty, 0, Nil, 0)
+        val emptyQ = makeLazyQueue(LazyList.empty, 0, Nil, 0)
         emptyQ.pop
       }
     }

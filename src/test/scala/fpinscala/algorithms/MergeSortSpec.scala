@@ -1,8 +1,9 @@
 package fpinscala.algorithms.sorting
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class MergeSortSpec extends WordSpec with Matchers {
+class MergeSortSpec extends AnyWordSpec with Matchers {
   import fpinscala.algorithms.sorting.MergeSort._
 
   "merge(l1, l2)" should {

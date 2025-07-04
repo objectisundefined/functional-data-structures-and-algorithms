@@ -1,8 +1,9 @@
 package fpinscala.datastructures.queues
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class FifoSpec extends WordSpec with Matchers {
+class QueueSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.queues.Fifo._
 
   "push" should {

@@ -1,13 +1,14 @@
 package fpinscala.datastructures.deques
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class DequeSpec extends WordSpec with Matchers {
+class DequeSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.deques.Deque._
 
   "deque" should {
     "works when pushFront first then popFront" in {
-      val dq = Deque(0, Stream.Empty, 0, Stream.Empty)
+      val dq = Deque(0, LazyList.empty, 0, LazyList.empty)
       val dq1 = dq.pushFront(1)
       val dq2 =  dq1.pushFront(2)
       val dq3 = dq2.pushFront(3)
@@ -27,7 +28,7 @@ class DequeSpec extends WordSpec with Matchers {
     }
 
     "works when pushFront first then popEnd" in {
-      val dq = Deque(0, Stream.Empty, 0, Stream.Empty)
+      val dq = Deque(0, LazyList.empty, 0, LazyList.empty)
       val dq1 = dq.pushFront(1)
       val dq2 =  dq1.pushFront(2)
       val dq3 = dq2.pushFront(3)
@@ -47,7 +48,7 @@ class DequeSpec extends WordSpec with Matchers {
     }
 
     "works when pushEnd first then popEnd" in {
-      val dq = Deque(0, Stream.Empty, 0, Stream.Empty)
+      val dq = Deque(0, LazyList.empty, 0, LazyList.empty)
       val dq1 = dq.pushEnd(1)
       val dq2 =  dq1.pushEnd(2)
       val dq3 = dq2.pushEnd(3)
@@ -67,7 +68,7 @@ class DequeSpec extends WordSpec with Matchers {
     }
 
     "works when pushEnd first then popFront" in {
-      val dq = Deque(0, Stream.Empty, 0, Stream.Empty)
+      val dq = Deque(0, LazyList.empty, 0, LazyList.empty)
       val dq1 = dq.pushEnd(1)
       val dq2 =  dq1.pushEnd(2)
       val dq3 = dq2.pushEnd(3)

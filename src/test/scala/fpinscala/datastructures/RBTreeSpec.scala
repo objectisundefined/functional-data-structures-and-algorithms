@@ -1,8 +1,9 @@
 package fpinscala.datastructures.rbtrees
 
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class TreeSpec extends WordSpec with Matchers {
+class RBTreeSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.rbtrees.RBTree._
 
   def height[A](t: Tree[A]) = {

@@ -1,8 +1,9 @@
 package fpinscala.datastructures.trees
 
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class TreeSpec extends WordSpec with Matchers {
+class TreeSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.trees.Tree._
 
   "size" should {
@@ -30,7 +31,7 @@ class TreeSpec extends WordSpec with Matchers {
 
   "map" should {
     "apply f to all element" in {
-      map(Leaf(1))(_ ⇒ "A") shouldEqual Leaf("A")
+      map(Leaf(1))(_ => "A") shouldEqual Leaf("A")
       map(Branch(Branch(Leaf(1), Leaf(2)), Leaf(40)))(_ + 1) shouldEqual Branch(Branch(Leaf(2), Leaf(3)), Leaf(41))
     }
   }

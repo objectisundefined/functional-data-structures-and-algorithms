@@ -1,8 +1,9 @@
 package fpinscala.datastructures.lists
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class ListSpec extends WordSpec with Matchers {
+class ListSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.lists.List._
   
   "List" should {
@@ -141,7 +142,7 @@ class ListSpec extends WordSpec with Matchers {
 
   "mapWithIndex" should {
     "return a list that contains the results of appling the function on every item and it's index" in {
-      mapWithIndex(List("A", "B", "C", "D"))(_ + _) shouldEqual List("A0", "B1", "C2", "D3")
+      mapWithIndex(List("A", "B", "C", "D"))((s, i) => s"$s$i") shouldEqual List("A0", "B1", "C2", "D3")
     }
   }
 
@@ -159,7 +160,7 @@ class ListSpec extends WordSpec with Matchers {
       zipWith(List(1, 2, 3), List(4, 5, 6))(_ + _) shouldEqual List(5, 7, 9)
     }
     "work fine with lists of different length" in {
-      zipWith(List(1, 2, 3), List("A", "B", "C", "D"))(_ + _) shouldEqual List("1A", "2B", "3C")
+      zipWith(List(1, 2, 3), List("A", "B", "C", "D"))((n, s) => s"$n$s") shouldEqual List("1A", "2B", "3C")
     }
   }
 
@@ -181,7 +182,7 @@ class ListSpec extends WordSpec with Matchers {
       dropWhile[Int](List(1, 2, 3, 4), _ % 2 != 0) shouldEqual List(2, 3, 4)
     }
     "return Nil on empty list" in {
-      dropWhile[Int](Nil, _ ⇒ true) shouldEqual Nil
+      dropWhile[Int](Nil, _ => true) shouldEqual Nil
     }
   }
 

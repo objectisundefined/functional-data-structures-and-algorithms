@@ -1,8 +1,9 @@
 package fpinscala.algorithms.sorting
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class QuickSortSpec extends WordSpec with Matchers {
+class QuickSortSpec extends AnyWordSpec with Matchers {
   import fpinscala.algorithms.sorting.QuickSort._
 
   "partition(e, l, fp, sp)" should {
