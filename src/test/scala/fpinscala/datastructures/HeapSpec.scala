@@ -1,8 +1,9 @@
 package fpinscala.datastructures.heaps
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class LeftistHeapSpec extends WordSpec with Matchers {
+class HeapSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.heaps.LeftistHeap._
 
   val emptyH: Tree = Leaf

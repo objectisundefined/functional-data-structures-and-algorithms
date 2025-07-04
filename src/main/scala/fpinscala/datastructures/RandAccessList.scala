@@ -61,12 +61,14 @@ object RandAccessList {
     case (0, Leaf(x)) => x
     case (i, Node(sz, t1, t2)) if i < (sz / 2) => searchTree(i, t1)
     case (i, Node(sz, t1, t2)) => searchTree(i - sz / 2, t2)
+    case _ => sys.error("Invalid tree structure or index")
   }
 
   def lookup(i: Int, tree: List[Tree]): Int = tree match {
     case Zero :: ts => lookup(i, ts)
     case One(t) :: ts if i < t.size => searchTree(i, t)
     case One(t) :: ts if i >= t.size => lookup(i - t.size, ts)
+    case _ => sys.error("Invalid tree list structure or index out of bounds")
   }
 
   def removeTree(tree: List[Tree]): (Tree, List[Tree]) = tree match {
@@ -92,12 +94,14 @@ object RandAccessList {
     case (0, Leaf(x)) => Leaf(newval)
     case (_, Node(sz, t1, t2)) if (i < sz / 2) => Node(sz, setValInTree(i, newval, t1), t2)
     case (_, Node(sz, t1, t2)) => Node(sz, t1, setValInTree(i - sz / 2, newval, t2))
+    case _ => sys.error("Invalid tree structure or index")
   }
 
   def setVal(i: Int, newval: Int, treeList: List[Tree]): List[Tree] = treeList match {
     case Zero :: ts => Zero :: setVal(i, newval, ts)
     case One(t) :: ts if i < t.size => One(setValInTree(i, newval, t)) :: ts
     case One(t) :: ts => One(t) :: setVal(i - t.size, newval, ts)
+    case _ => sys.error("Invalid tree list structure or index out of bounds")
   }
 
 }

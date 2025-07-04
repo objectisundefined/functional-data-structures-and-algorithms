@@ -1,8 +1,9 @@
 package fpinscala.datastructures.graphs
 
-import org.scalatest.{ WordSpec, Matchers }
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class GraphSpec extends WordSpec with Matchers {
+class GraphSpec extends AnyWordSpec with Matchers {
   import fpinscala.datastructures.graphs.Graph._
 
   val graph = List(
