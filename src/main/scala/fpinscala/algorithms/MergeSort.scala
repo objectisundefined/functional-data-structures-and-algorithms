@@ -1,7 +1,7 @@
 package fpinscala.algorithms.sorting
 
 object MergeSort {
-  def merge[T <% Ordered[T]](l1: List[T], l2: List[T]): List[T] = (l1, l2) match {
+  def merge[T](l1: List[T], l2: List[T])(implicit ev: T => Ordered[T]): List[T] = (l1, l2) match {
     case (_, Nil) => l1
     case (Nil, _) => l2
     case (x :: xs, y :: ys) =>
@@ -9,7 +9,7 @@ object MergeSort {
   }
 
   /*
-  def mergeSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
+  def mergeSort[T](l: List[T])(implicit ev: T => Ordered[T]): List[T] = l match {
     case Nil => Nil
     case _ :: Nil => l
     case _ =>
@@ -20,7 +20,7 @@ object MergeSort {
   }
   */
 
-  def split[T <% Ordered[T]](l : List[T]): (List[T], List[T]) = l match {
+  def split[T](l : List[T])(implicit ev: T => Ordered[T]): (List[T], List[T]) = l match {
     case Nil => (Nil, Nil)
     case _ :: Nil => (l, Nil)
     case x :: a :: xs =>
@@ -29,7 +29,7 @@ object MergeSort {
       (x :: f, a :: r)
   }
 
-  def mergeSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
+  def mergeSort[T](l: List[T])(implicit ev: T => Ordered[T]): List[T] = l match {
     case Nil => Nil
     case _ :: Nil => l
     case _ =>

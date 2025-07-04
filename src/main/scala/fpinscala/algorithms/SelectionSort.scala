@@ -3,7 +3,7 @@ package fpinscala.algorithms.sorting
 object SelectionSort {
 
   /*
-  def selectionSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
+  def selectionSort[T](l: List[T])(implicit ev: T => Ordered[T]): List[T] = l match {
     case Nil => Nil
     case x :: Nil => l
     case x :: xs =>
@@ -16,7 +16,7 @@ object SelectionSort {
   }
   */
 
-  def selectionSort[T <% Ordered[T]](l: List[T]): List[T] = l match {
+  def selectionSort[T](l: List[T])(implicit ev: T => Ordered[T]): List[T] = l match {
     case Nil => Nil
     case x :: Nil => l
     case _ =>
