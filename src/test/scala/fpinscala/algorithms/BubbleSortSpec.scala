@@ -9,34 +9,22 @@ class BubbleSortSpec extends AnyWordSpec with Matchers {
   "getLargest(list)" should {
     "works when list is empty" in {
       val l: List[Integer] = List()
-      val (a, r) = getLargest(l)
-
-      a shouldEqual null
-      r shouldEqual Nil
+      getLargest(l) shouldEqual None
     }
 
     "works when list has only one elem" in {
       val l: List[Integer] = List(1)
-      val (a, r) = getLargest(l)
-
-      a shouldEqual 1
-      r shouldEqual Nil
+      getLargest(l) shouldEqual Some((1, Nil))
     }
 
     "works when list has two or more int elems" in {
       val l: List[Integer] = List(1, 3, 5, 2, 6)
-      val (a, r) = getLargest(l)
-
-      a shouldEqual 6
-      r shouldEqual List(1, 3, 5, 2)
+      getLargest(l) shouldEqual Some((6, List(1, 3, 5, 2)))
     }
 
     "works when list has two or more string elems" in {
       val l: List[String] = List("a", "c", "e", "b", "d")
-      val (a, r) = getLargest(l)
-
-      a shouldEqual "e"
-      r shouldEqual List("a", "c", "d", "b")
+      getLargest(l) shouldEqual Some(("e", List("a", "c", "d", "b")))
     }
 
   }
