@@ -31,9 +31,9 @@ object SelectionSort {
 
   // Using fold for a different functional approach
   def selectionSortFold[T](l: List[T])(implicit ev: T => Ordered[T]): List[T] = {
-    def insertSorted(x: T, sorted: List[T]): List[T] = sorted match {
+    def insertSorted(sorted: List[T], x: T): List[T] = sorted match {
       case Nil => List(x)
-      case y :: ys => if (x <= y) x :: sorted else y :: insertSorted(x, ys)
+      case y :: ys => if (x <= y) x :: sorted else y :: insertSorted(ys, x)
     }
     
     l.foldLeft(List.empty[T])(insertSorted)
@@ -47,6 +47,6 @@ object SelectionSort {
         case Some((elem, newSeed)) => elem :: unfold(newSeed)(f)
       }
     
-    unfold(l)(extractMin)
+    unfold(l)(extractMin(_))
   }
 }

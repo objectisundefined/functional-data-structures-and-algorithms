@@ -14,3 +14,6 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-Xfatal-warnings"
 )
+
+// Don't treat deprecation warnings as fatal in tests (for backward compatibility)
+Test / scalacOptions --= Seq("-Xfatal-warnings")

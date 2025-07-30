@@ -8,7 +8,7 @@ object Graph {
   // Result types for operations that can fail
   sealed trait GraphResult[+A]
   case class Success[A](value: A) extends GraphResult[A]
-  case class CycleDetected[A](cycle: List[A]) extends GraphResult[A]
+  case class CycleDetected[A](cycle: A) extends GraphResult[A]
   case object EmptyGraph extends GraphResult[Nothing]
 
   // Graph operations
@@ -77,26 +77,46 @@ object Graph {
     bfs(List(start), Set.empty, Nil)
   }
 
-  // Topological sort with cycle detection
+  // Topological sort with cycle detection using DFS post-order
   def topologicalSort[A](graph: Graph[A]): GraphResult[List[A]] = {
-    def topSort(nodes: List[A], state: DFSState[A]): DFSState[A] = nodes match {
-      case Nil => state
-      case node :: rest =>
-        if (state.path.contains(node)) state.detectCycle(node)
-        else if (state.isVisited(node)) topSort(rest, state)
-        else {
-          val nodeState = state.visit(node)
-          val successorState = topSort(successors(node, graph).reverse, nodeState)
-          topSort(rest, successorState.copy(path = nodeState.path))
+    case class TopSortState[A](visited: Set[A], visiting: Set[A], result: List[A])
+    
+    def dfs(node: A, state: TopSortState[A]): Either[List[A], TopSortState[A]] = {
+      if (state.visiting.contains(node)) {
+        // Found a cycle
+        Left(List(node))
+      } else if (state.visited.contains(node)) {
+        Right(state)
+      } else {
+        val newState = state.copy(visiting = state.visiting + node)
+        // Visit all successors first
+        successors(node, graph).foldLeft[Either[List[A], TopSortState[A]]](Right(newState)) {
+          case (Left(cycle), _) => Left(cycle)
+          case (Right(currentState), successor) => dfs(successor, currentState)
+        } match {
+          case Left(cycle) => Left(cycle)
+          case Right(finalState) => 
+            // Add node to result after visiting all successors (post-order)
+            Right(finalState.copy(
+              visited = finalState.visited + node,
+              visiting = finalState.visiting - node,
+              result = node :: finalState.result
+            ))
         }
+      }
     }
     
     val allVertices = vertices(graph)
     if (allVertices.isEmpty) Success(Nil)
     else {
-      val finalState = topSort(allVertices, DFSState.empty)
-      if (finalState.cycles.nonEmpty) CycleDetected(finalState.cycles.head)
-      else Success(finalState.visited.toList)
+      val initialState = TopSortState[A](Set.empty, Set.empty, Nil)
+      allVertices.foldLeft[Either[List[A], TopSortState[A]]](Right(initialState)) {
+        case (Left(cycle), _) => Left(cycle)
+        case (Right(state), vertex) => dfs(vertex, state)
+      } match {
+        case Left(cycle) => CycleDetected(cycle)
+        case Right(finalState) => Success(finalState.result)
+      }
     }
   }
 
@@ -162,7 +182,7 @@ object Graph {
     }
     
     val initialState = TarjanState[A](0, Nil, Map.empty, Map.empty, Set.empty, Nil)
-    val finalState = vertices(graph).foldLeft(initialState)(tarjan)
+    val finalState = vertices(graph).foldLeft(initialState)((state, vertex) => tarjan(vertex, state))
     finalState.components.reverse
   }
 
@@ -227,4 +247,32 @@ object Graph {
 
   @deprecated("Use hasCycle instead", "2.0")
   def cycled(g: List[(String, String)]): Boolean = hasCycle(g)
+  
+  @deprecated("Use topologicalSort with exception handling", "2.0")
+  def topsortWithCycle(g: List[(String, String)]): List[String] = 
+    topologicalSort(g) match {
+      case Success(result) => result
+      case CycleDetected(_) => sys.error("cycle detected")
+      case EmptyGraph => Nil
+    }
+  
+  @deprecated("Use topologicalSort instead", "2.0")
+  def topsortPrintCycle(g: List[(String, String)]): (List[String], List[String]) = 
+    topologicalSort(g) match {
+      case Success(result) => (result, Nil)
+      case CycleDetected(cycle) => (Nil, cycle)
+      case EmptyGraph => (Nil, Nil)
+    }
+  
+  @deprecated("Use depthFirstSearch for each vertex", "2.0")
+  def traverseGraph(g: List[(String, String)]): List[String] = {
+    val allVertices = vertices(g)
+    allVertices.foldLeft(List.empty[String])((acc, vertex) => 
+      if (acc.contains(vertex)) acc 
+      else acc ::: depthFirstSearch(vertex, g))
+  }
+  
+  @deprecated("Use foldVertices instead", "2.0")
+  def foldl[A](g: List[(String, String)])(z: A)(f: (A, String) => A): A = 
+    foldVertices(g, z)(f)
 }

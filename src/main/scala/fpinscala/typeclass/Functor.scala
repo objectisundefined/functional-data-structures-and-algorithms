@@ -35,7 +35,7 @@ trait Monad[F[_]] extends Functor[F] {
     sequence(List.fill(n)(fa))
   
   def filterM[A](as: List[A])(f: A => F[Boolean]): F[List[A]] =
-    traverse(as)(a => map(f(a))(if (_) List(a) else Nil)).map(_.flatten)
+    map(traverse(as)(a => map(f(a))(b => if (b) List(a) else Nil)))(_.flatten)
 }
 
 // Monoid type class
@@ -197,7 +197,7 @@ object syntax {
 
 // Helper object for working with type classes
 object TypeClass {
-  def apply[TC[_], F[_]](implicit tc: TC[F]): TC[F] = tc
+  def apply[TC[_[_]], F[_]](implicit tc: TC[F]): TC[F] = tc
   
   // Common combinators
   def pure[F[_]: Monad, A](a: A): F[A] = Monad[F].pure(a)

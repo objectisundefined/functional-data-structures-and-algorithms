@@ -19,7 +19,7 @@ object LeftistHeap {
     def single[A](value: A): Tree[A] = Node(1, value, Leaf, Leaf)
     
     def apply[A](values: A*)(implicit ord: Ordering[A]): Tree[A] =
-      values.foldLeft(empty[A])(insert)
+      values.foldLeft(empty[A])((heap, value) => insert(value, heap))
   }
 
   // Create a node with proper leftist property
@@ -83,7 +83,7 @@ object LeftistHeap {
     filterAcc(heap, Tree.empty[A])
   }
 
-  def foldLeft[A, B](heap: Tree[A], z: B)(f: (B, A) => B): B = {
+  def foldLeft[A, B](heap: Tree[A], z: B)(f: (B, A) => B)(implicit ord: Ordering[A]): B = {
     def foldAcc(h: Tree[A], acc: B): B = h match {
       case Leaf => acc
       case Node(_, v, l, r) => foldAcc(merge(l, r), f(acc, v))
@@ -91,7 +91,7 @@ object LeftistHeap {
     foldAcc(heap, z)
   }
 
-  def foldRight[A, B](heap: Tree[A], z: B)(f: (A, B) => B): B = {
+  def foldRight[A, B](heap: Tree[A], z: B)(f: (A, B) => B)(implicit ord: Ordering[A]): B = {
     val elements = toList(heap)
     elements.foldRight(z)(f)
   }
@@ -111,7 +111,7 @@ object LeftistHeap {
 
   // Create heap from list
   def fromList[A](list: List[A])(implicit ord: Ordering[A]): Tree[A] =
-    list.foldLeft(Tree.empty[A])(insert)
+    list.foldLeft(Tree.empty[A])((heap, value) => insert(value, heap))
 
   // Merge multiple heaps
   def mergeAll[A](heaps: List[Tree[A]])(implicit ord: Ordering[A]): Tree[A] =

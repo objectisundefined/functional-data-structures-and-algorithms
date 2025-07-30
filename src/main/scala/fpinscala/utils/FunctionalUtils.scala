@@ -185,7 +185,7 @@ object FunctionalUtils {
   object Reader {
     def apply[R, A](a: A): Reader[R, A] = Reader(_ => a)
     
-    def ask[R]: Reader[R, R] = Reader(identity)
+    def ask[R]: Reader[R, R] = Reader(r => r)
     
     def local[R, A](f: R => R)(reader: Reader[R, A]): Reader[R, A] =
       Reader(r => reader.run(f(r)))
